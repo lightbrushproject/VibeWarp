@@ -30,6 +30,11 @@ coherent clip; this gives you something that looks made by hand.
 Optical flow, consistency masks and ControlNets are the controls for *how much* it holds
 together — turn them up for stability, down for dissolve.
 
+Schedules can also be compiled from the soundtrack: audio-reactive scheduling
+measures per-frame energy, bass and onsets and maps them onto style strength,
+CFG, flow blend and steps, with an onset punch that drops warp inheritance on
+a beat hit and fades it back in. See [Audio-reactive scheduling](docs/audio-reactive.md).
+
 ## The interface
 
 **FLUX.3 Image Klein**, **MOSS-Image**, and **MiniMax H3 Image** are available
@@ -127,6 +132,7 @@ timeline includes **Download** for the current image or assembled video and **Ma
 - [Settings reference](docs/settings.md) — WarpFusion settings mapping, schedules, consistency masks, video assembly, tiled VAE, noise modes, prompts/LORAs, vendored libraries
 - [Architecture](docs/architecture.md) — render pipeline, settings flow, and dependency diagrams
 - [Disco Diffusion and turbo](docs/disco-diffusion.md) — classic pixel diffusion, guidance encoders, download progress, and flow turbo
+- [Audio-reactive scheduling](docs/audio-reactive.md) — compile the music itself (energy, bass, onsets) into per-frame diffusion schedules
 - [GPU validation](docs/gpu-validation.md) — resumable notebook-parity suite and bulk reports
 - [Roadmap and known gaps](docs/roadmap.md) — what is verified against the notebook, what is not, and where to help
 

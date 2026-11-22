@@ -352,6 +352,22 @@ class SceneConfig:
 
 
 @dataclass
+class AudioConfig:
+    """Audio-reactive scheduling (core/audio_reactive.py).
+
+    The audio twin of SceneConfig: per-frame audio features (energy, bass,
+    onset strength) are compiled into the same four schedules scene
+    scheduling writes. Inert unless enabled is True. mappings=None selects
+    audio_reactive.DEFAULT_MAPPING (the Lightbrush preset).
+    """
+    enabled: bool = False
+    audio_path: str = ''  # empty = extract the audio track from the source video
+    fps_override: float = 0.0  # 0 = use the probed/output fps
+    mappings: Any = None
+    onset_threshold_percentile: float = 90.0
+
+
+@dataclass
 class CaptionConfig:
     """Keyframe captioning (notebook cell 30). Enables the {caption}
     placeholder in text/rec prompts."""
@@ -969,6 +985,7 @@ class RunConfig:
     mask: BackgroundMaskConfig = field(default_factory=BackgroundMaskConfig)
     captions: CaptionConfig = field(default_factory=CaptionConfig)
     scene: SceneConfig = field(default_factory=SceneConfig)
+    audio: AudioConfig = field(default_factory=AudioConfig)
     freeu: FreeUConfig = field(default_factory=FreeUConfig)
     video_assembly: VideoAssemblyConfig = field(default_factory=VideoAssemblyConfig)
     animatediff: AnimateDiffConfig = field(default_factory=AnimateDiffConfig)

@@ -493,6 +493,32 @@ def run(
         from vibewarp.core.scene_detect import apply_content_schedules
         apply_content_schedules(config, scene_diff)
 
+    # 4a-0b. Audio-reactive scheduling (core/audio_reactive.py). The audio
+    # twin of the scene block above: per-frame audio features compile into
+    # the same four schedules. Fail-soft by design: any audio problem warns
+    # and the render continues without audio schedules.
+    if getattr(config, 'audio', None) is not None and config.audio.enabled:
+        try:
+            from glob import glob as _audio_glob
+            n_audio_frames = len(_audio_glob(
+                os.path.join(video_frames_folder, '*.jpg')))
+            if n_audio_frames == 0:
+                raise RuntimeError('no extracted frames to schedule against')
+            audio_fps = config.audio.fps_override or resolve_output_fps(config)
+            audio_source = config.audio.audio_path or config.video.video_init_path
+            if not audio_source:
+                raise RuntimeError('no audio_path and no source video set')
+            from vibewarp.core.audio_reactive import (
+                analyze_audio, apply_audio_schedules, compile_schedules)
+            audio_features = analyze_audio(audio_source, audio_fps, n_audio_frames)
+            audio_schedules = compile_schedules(
+                audio_features, audio_fps,
+                mappings=config.audio.mappings,
+                onset_threshold_percentile=config.audio.onset_threshold_percentile)
+            apply_audio_schedules(config, audio_schedules)
+        except Exception as exc:
+            print(f'  WARNING: audio-reactive scheduling skipped: {exc}')
+
     # 4a. Keyframe captioning pre-pass (notebook cell 30) — enables the
     # {caption} prompt placeholder, substituted per frame in render_frame.
     if config.captions.make_captions:

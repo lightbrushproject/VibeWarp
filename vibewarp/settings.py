@@ -102,7 +102,7 @@ _VIBEWARP_SECTIONS = [
     # Longer prefixes must come before shorter ones that share a stem
     'reconstruction_noise', 'video_assembly', 'contact_sheet',
     'animatediff', 'ipadapter',
-    'diffusion', 'brightness', 'captions', 'scene', 'freeu',
+    'diffusion', 'brightness', 'captions', 'scene', 'audio', 'freeu',
     'color', 'warp', 'flow', 'video', 'mask', 'vae', 'hidream', 'flux', 'qwen',
     'mage', 'comfy_image', 'disco', 'turbo',
 ]
@@ -759,6 +759,13 @@ def load_warpfusion_settings(settings_path: str, models_root: Optional[str] = No
             'latent_scale_template': raw.get('latent_scale_template', None),
             'init_scale_template': raw.get('init_scale_template', None),
             'image_scale_template': raw.get('image_scale_template', None),
+        },
+        'audio': {
+            'enabled': raw.get('audio_reactive', False),
+            'audio_path': raw.get('audio_path', '') or '',
+            'fps_override': float(raw.get('audio_fps_override', 0.0)),
+            'mappings': raw.get('audio_mappings', None),
+            'onset_threshold_percentile': float(raw.get('audio_onset_threshold_percentile', 90.0)),
         },
         'captions': {
             'make_captions': raw.get('make_captions', False),
